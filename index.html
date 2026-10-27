@@ -1,0 +1,256 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LabPrep — AI Lab Exam Practice</title>
+<style>
+:root {
+  --site-primary: #2459E0;
+  --site-on-primary: #FFFFFF;
+  --site-secondary: #E7EDFF;
+  --site-on-secondary: #173A9B;
+  --site-background: #F4F6FB;
+  --site-on-background: #17213A;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --surface: light-dark(#FFFFFF, #171D2B);
+  --surface-soft: light-dark(#F8FAFF, #20283A);
+  --text: light-dark(#17213A, #F0F3FB);
+  --muted: light-dark(#65708A, #A6B0C7);
+  --border: light-dark(#E0E6F2, #343E53);
+  --green: #14815D;
+  --red: #C04444;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+.app-root { min-height: 100vh; background-color: var(--site-background); color: var(--site-on-background); border-radius: 0; position: relative; overflow: hidden; }
+.topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding: calc(18px * var(--site-spacing-scale)) clamp(18px, 5vw, 64px); border-bottom:1px solid var(--border); background:var(--surface); }
+.brand { display:flex; align-items:center; gap:11px; font-weight:800; letter-spacing:-.04em; font-size:21px; color:var(--text); }
+.brand-mark { width:36px;height:36px;border-radius:12px;background:var(--site-primary);color:white;display:grid;place-items:center;font-weight:900;font-size:18px; box-shadow:0 5px 14px #2459e033; }
+.top-note { font-size:12px; color:var(--muted); border:1px solid var(--border); padding:8px 12px; border-radius:999px; }
+main { width:min(1100px, calc(100% - 36px)); margin:0 auto; padding:clamp(24px,4vw,48px) 0 56px; }
+.hero { display:grid; grid-template-columns:1.25fr .75fr; gap:26px; align-items:stretch; margin-bottom:26px; }
+.hero-copy { padding:14px 0; }
+.eyebrow { color:var(--site-primary); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.12em; display:flex; align-items:center; gap:8px; }
+h1 { font-family:var(--site-font-heading); font-size:calc(clamp(34px, 4.5vw, 54px) * var(--site-heading-scale)); line-height:1.04; letter-spacing:-.055em; margin:16px 0; max-width:640px; }
+.hero-copy p { color:var(--muted); font-size:16px; line-height:1.7; max-width:610px; margin:0; }
+.hero-card { background:var(--site-primary); color:white; border-radius:calc(24px * var(--site-radius-scale)); padding:26px; position:relative; overflow:hidden; min-height:230px; display:flex; flex-direction:column; justify-content:space-between; }
+.hero-card:after { content:""; position:absolute; width:190px;height:190px;right:-50px;top:-45px;border:1px solid #ffffff33;border-radius:50%;box-shadow:0 0 0 25px #ffffff0b,0 0 0 50px #ffffff08; opacity:var(--site-decoration-opacity); }
+.hero-card .mini-label { color:#DCE6FF; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; }
+.hero-card h2 { font-size:24px; line-height:1.2; letter-spacing:-.04em; max-width:270px; margin:18px 0; position:relative; z-index:1; }
+.steps { display:flex; gap:8px; align-items:center; font-size:12px; color:#E0E8FF; position:relative;z-index:1; }
+.step-dot { width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#ffffff26;font-weight:800; }
+.workspace { display:grid; grid-template-columns: .92fr 1.08fr; gap:20px; align-items:start; }
+.panel { background:var(--surface); border:1px solid var(--border); border-radius:calc(20px * var(--site-radius-scale)); padding:clamp(18px,2.5vw,26px); box-shadow:0 8px 28px #17213a08; min-width:0; }
+.panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:20px; }
+.panel h3 { font-size:18px; letter-spacing:-.025em; margin:0 0 6px; color:var(--text); }
+.panel-sub { font-size:13px; line-height:1.55; color:var(--muted); margin:0; }
+.count { flex-shrink:0; background:var(--site-secondary); color:var(--site-on-secondary); font-size:12px; font-weight:800; padding:7px 10px; border-radius:999px; }
+.field-label { display:block; font-size:12px; font-weight:800; color:var(--text); margin:16px 0 8px; }
+textarea, input[type=text] { width:100%; border:1px solid var(--border); background:var(--surface-soft); color:var(--text); border-radius:12px; padding:12px 13px; font:inherit; font-size:14px; outline:none; }
+textarea { min-height:112px; resize:vertical; line-height:1.5; }
+textarea:focus, input:focus { border-color:var(--site-primary); box-shadow:0 0 0 3px #2459e01c; }
+.help { color:var(--muted); font-size:11px; line-height:1.5; margin-top:7px; }
+.btn { border:0; border-radius:12px; padding:12px 15px; background:var(--site-primary); color:white; font:inherit; font-size:13px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:transform .15s, opacity .15s; }
+.btn:hover { transform:translateY(-1px); }
+.btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+.btn.secondary { background:var(--site-secondary); color:var(--site-on-secondary); }
+.btn.ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
+.btn.dark { background:light-dark(#17213A,#E8EDFA); color:light-dark(#FFFFFF,#17213A); }
+.actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+.sample-row { display:flex; justify-content:space-between; align-items:center; gap:10px; border-top:1px solid var(--border); margin-top:20px; padding-top:16px; }
+.sample-row span { color:var(--muted); font-size:12px; }
+.qa-list { display:flex; flex-direction:column; gap:9px; margin-top:17px; }
+.qa-item { border:1px solid var(--border); background:var(--surface-soft); border-radius:13px; padding:13px; }
+.qa-q { font-size:13px; font-weight:800; color:var(--text); margin-bottom:6px; }
+.qa-a { color:var(--muted); font-size:12px; line-height:1.5; }
+.qa-item-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.qa-item-head .qa-q { flex:1; min-width:0; }
+.qa-delete { border:1px solid var(--border); background:transparent; color:var(--muted); border-radius:8px; padding:5px 8px; font:inherit; font-size:11px; font-weight:800; cursor:pointer; flex-shrink:0; }
+.qa-delete:hover { color:var(--red); border-color:var(--red); }
+.qa-empty { border:1px dashed var(--border); padding:18px; text-align:center; border-radius:13px; color:var(--muted); font-size:13px; line-height:1.5; }
+.practice-panel { min-height:500px; }
+.mode-row { display:flex; background:var(--surface-soft); padding:4px; border-radius:12px; gap:4px; margin:16px 0; }
+.mode { flex:1; padding:9px 8px; font:inherit; font-size:12px; font-weight:800; border:0; border-radius:9px; color:var(--muted); background:transparent; cursor:pointer; }
+.mode.active { background:var(--surface); color:var(--site-primary); box-shadow:0 2px 8px #17213a0d; }
+.listen-card { border:1px solid var(--border); background:var(--surface-soft); border-radius:16px; padding:18px; }
+.listen-status { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:800; color:var(--text); }
+.status-dot { width:10px;height:10px;border-radius:50%;background:#A6B0C7; }
+.status-dot.live { background:#E14E5B; box-shadow:0 0 0 5px #E14E5B1A; animation:pulse 1.6s infinite; }
+@keyframes pulse { 50% { box-shadow:0 0 0 9px #E14E5B08; } }
+.mic-hint { font-size:12px; color:var(--muted); line-height:1.5; margin:9px 0 14px; }
+.transcript-box { min-height:86px; border:1px dashed var(--border); border-radius:12px; padding:12px; color:var(--muted); font-size:13px; line-height:1.55; background:var(--surface); }
+.answer-card { margin-top:14px; border-radius:16px; background:light-dark(#EFFAF5,#18372F); border:1px solid light-dark(#CDEBDD,#2A5D4D); padding:17px; display:none; }
+.answer-card.show { display:block; }
+.answer-kicker { display:flex; align-items:center; gap:7px; color:var(--green); font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
+.answer-text { color:var(--text); font-size:17px; line-height:1.5; font-weight:650; margin:12px 0; }
+.answer-meta { font-size:11px; color:var(--muted); }
+.session-controls { display:flex; gap:9px; flex-wrap:wrap; margin-top:14px; }
+.session-controls .btn { flex:1; min-width:125px; }
+.speech-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0 0; margin-top:14px; border-top:1px solid var(--border); }
+.toggle-label { display:flex; align-items:center; gap:9px; color:var(--text); font-size:12px; font-weight:700; }
+.toggle-label input { accent-color:var(--site-primary); width:16px;height:16px; }
+.notice { margin-top:20px; padding:14px 16px; border-radius:13px; background:light-dark(#FFF7E8,#3B3020); color:light-dark(#7C5414,#F2D9A6); font-size:12px; line-height:1.55; }
+.footer { text-align:center; color:var(--muted); font-size:11px; margin-top:26px; line-height:1.7; }
+@media(max-width:800px) { .hero { grid-template-columns:1fr; } .hero-card { min-height:180px; } .workspace { grid-template-columns:1fr; } .practice-panel { min-height:0; } }
+@media(max-width:480px) { .top-note { display:none; } .topbar { padding:14px 18px; } .brand { font-size:19px; } main { width:calc(100% - 24px); } .panel { padding:17px; } .session-controls .btn { min-width:100%; } }
+</style>
+</head>
+<body>
+<div class="app-root" id="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">L</div>LabPrep</div>
+    <div class="top-note">✦ Mock viva practice · Before your assessment</div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span>✳</span> Your personal oral-exam coach</div>
+        <h1>Practise out loud.<br>Walk in prepared.</h1>
+        <p>Add your lab notes and prepared answers. Let a friend quiz you like a teacher, then use AI-style matching to rehearse concise answers and build confidence before the real assessment.</p>
+      </div>
+      <div class="hero-card">
+        <div class="mini-label">Your practice flow</div>
+        <h2>From study material to confident answers.</h2>
+        <div class="steps"><span class="step-dot">1</span> Add notes <span>→</span><span class="step-dot">2</span> Get quizzed <span>→</span><span class="step-dot">3</span> Review</div>
+      </div>
+    </section>
+    <section class="workspace">
+      <div class="panel">
+        <div class="panel-head"><div><h3>1. Your study material</h3><p class="panel-sub">Paste question-and-answer pairs or load the sample set.</p></div><span class="count" id="qaCount">0 pairs</span></div>
+        <label class="field-label" for="qaInput">Paste your Q&A</label>
+        <textarea id="qaInput" placeholder="Q: What is the purpose of a control sample?&#10;A: It provides a baseline for comparison.&#10;&#10;Q: Why calibrate the pipette?&#10;A: To ensure accurate and reproducible volumes."></textarea>
+        <label class="field-label" for="fileInput">Or import a study file</label>
+        <input id="fileInput" type="file" accept=".txt,.json,.csv,text/plain,application/json,text/csv" style="width:100%;color:var(--text);font:inherit;font-size:13px">
+        <div class="help">TXT/CSV: use Q: and A: lines. JSON: use an array of objects with “q” and “a” fields. PowerPoint/PDF extraction is not enabled in this prototype.</div>
+        <div class="help">Format: put each question on a line starting with “Q:” and its answer on the next line starting with “A:”. You can also add pairs manually below.</div>
+        <div class="actions"><button class="btn" id="loadBtn">＋ Add Q&A pairs</button><button class="btn secondary" id="sampleBtn">Load sample set</button><button class="btn ghost" id="exportBtn">Export Q&A JSON</button></div>
+        <div class="sample-row"><span>Knowledge base</span><button class="btn ghost" id="clearBtn">Clear all</button></div>
+        <div class="qa-list" id="qaList"><div class="qa-empty">Your Q&A will appear here.<br>Load the sample set to try the practice flow.</div></div>
+      </div>
+      <div class="panel practice-panel">
+        <div class="panel-head"><div><h3>2. Mock viva session</h3><p class="panel-sub">Have a friend ask one of your prepared questions.</p></div><span class="count">PRACTICE</span></div>
+        <div class="mode-row"><button class="mode active" id="typedMode">Type a question</button><button class="mode" id="micMode">Use microphone</button></div>
+        <div class="listen-card">
+          <div class="listen-status"><span class="status-dot" id="statusDot"></span><span id="statusText">Ready when you are</span></div>
+          <p class="mic-hint" id="micHint">Enter what your friend asked. The demo will match it against your saved Q&A and show a concise answer.</p>
+          <div id="typedArea"><label class="field-label" for="questionInput">Question asked by your friend</label><input id="questionInput" type="text" placeholder="e.g. Why do we calibrate a pipette?"><div class="actions"><button class="btn" id="askBtn">Find answer ↗</button></div></div>
+          <div id="micArea" hidden><div class="transcript-box" id="transcript">Microphone is off. Start listening to capture a practice question, if your browser supports speech recognition.</div><div class="actions"><button class="btn" id="startMicBtn">🎙 Start listening</button><button class="btn secondary" id="stopMicBtn" disabled>Stop</button></div><div class="help">Microphone support depends on your browser and preview environment. Audio may be processed by the browser's speech service.</div></div>
+        </div>
+        <div class="answer-card" id="answerCard"><div class="answer-kicker">✓ Matched study answer</div><div class="answer-text" id="answerText"></div><div class="answer-meta" id="answerMeta"></div><div class="actions"><button class="btn secondary" id="speakBtn">▶ Read answer aloud</button><button class="btn ghost" id="copyBtn">Copy answer</button></div></div>
+        <div class="speech-row"><label class="toggle-label"><input type="checkbox" id="speechToggle"> Speak matched answers automatically</label><label class="toggle-label"><input type="checkbox" id="shortToggle" checked> Concise mode</label></div>
+        <div class="notice"><strong>Practice responsibly.</strong> This prototype is designed for mock viva rehearsal before an assessment. It does not connect to a hosted AI model; matching runs locally against the Q&A you enter. Don’t record other people without their knowledge and consent.</div>
+      </div>
+    </section>
+    <div class="footer">LabPrep prototype · Keep your notes accurate and verify answers with your course material.<br>Microphone and spoken output require compatible browser features and permissions.</div>
+  </main>
+</div>
+<script>
+const sample = [
+ {q:'What is the purpose of a control sample?', a:'A control sample provides a known baseline so you can compare results and check whether the procedure is working correctly.'},
+ {q:'Why do we calibrate a pipette?', a:'Calibration checks that the pipette dispenses the intended volume, improving measurement accuracy and reproducibility.'},
+ {q:'Why should you wear personal protective equipment in the lab?', a:'PPE reduces exposure to chemical, biological, and physical hazards. The required PPE depends on the procedure and risk assessment.'},
+ {q:'What is the independent variable?', a:'The independent variable is the factor deliberately changed by the experimenter to test its effect on the outcome.'},
+ {q:'Why do we repeat an experiment?', a:'Repeats help assess variability, identify anomalous results, and improve confidence that the finding is reproducible.'}
+];
+let pairs = [];
+let currentAnswer = '';
+let recognition = null;
+let currentMode = 'typed';
+const $ = id => document.getElementById(id);
+try { const saved = JSON.parse(localStorage.getItem('labprep-qa-v1') || '[]'); if (Array.isArray(saved)) pairs = saved.filter(p => p && typeof p.q === 'string' && typeof p.a === 'string'); } catch(e) {}
+function normalize(s) { return s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim(); }
+function words(s) { return new Set(normalize(s).split(' ').filter(w => w.length > 2)); }
+function similarity(a,b) {
+ const A=words(a), B=words(b); if(!A.size || !B.size) return 0;
+ let overlap=0; A.forEach(w=>{if(B.has(w)) overlap++});
+ const dice=2*overlap/(A.size+B.size);
+ const na=normalize(a), nb=normalize(b);
+ return na.includes(nb)||nb.includes(na) ? Math.max(dice,.78) : dice;
+}
+function renderPairs() {
+ try { localStorage.setItem('labprep-qa-v1', JSON.stringify(pairs)); } catch(e) {}
+ $('qaCount').textContent = `${pairs.length} pair${pairs.length===1?'':'s'}`;
+ const list=$('qaList'); list.innerHTML='';
+ if(!pairs.length) { list.innerHTML='<div class="qa-empty">Your Q&A will appear here.<br>Load the sample set to try the practice flow.</div>'; return; }
+ pairs.forEach((p,i)=>{
+  const item=document.createElement('div'); item.className='qa-item';
+  const head=document.createElement('div'); head.className='qa-item-head';
+  const q=document.createElement('div'); q.className='qa-q'; q.textContent=`${i+1}. ${p.q}`;
+  const del=document.createElement('button'); del.className='qa-delete'; del.type='button'; del.textContent='Remove'; del.setAttribute('aria-label',`Remove question ${i+1}`); del.addEventListener('click',()=>{pairs.splice(i,1);renderPairs();showStatus('Question removed',true);});
+  const a=document.createElement('div'); a.className='qa-a'; a.textContent=p.a;
+  head.append(q,del); item.append(head,a); list.append(item);
+ });
+}
+function parsePairs(text) {
+ const lines=text.split(/\n/).map(x=>x.trim()).filter(Boolean); const out=[]; let q=''; let a='';
+ for(const line of lines) {
+  if(/^q\s*:/i.test(line)) { if(q&&a) out.push({q,a}); q=line.replace(/^q\s*:/i,'').trim(); a=''; }
+  else if(/^a\s*:/i.test(line)) a=(a?' '+a:'')+line.replace(/^a\s*:/i,'').trim();
+  else if(q&&!a) q+=' '+line; else if(q&&a) a+=' '+line;
+ }
+ if(q&&a) out.push({q,a}); return out;
+}
+function addPairs(newPairs) {
+ newPairs.forEach(p=>{ if(p.q&&p.a&&!pairs.some(x=>normalize(x.q)===normalize(p.q))) pairs.push({q:p.q.trim(),a:p.a.trim()}); });
+ renderPairs();
+}
+function answerQuestion(question) {
+ if(!pairs.length) { showStatus('Add study Q&A first',false); $('answerCard').classList.remove('show'); return; }
+ if(!question.trim()) return;
+ const ranked=pairs.map(p=>({p,score:Math.max(similarity(question,p.q),similarity(question,p.a)*.75)})).sort((a,b)=>b.score-a.score);
+ const best=ranked[0];
+ if(!best || best.score < .22) {
+  currentAnswer=''; $('answerCard').classList.remove('show'); showStatus('No confident match — try rephrasing',false); return;
+ }
+ currentAnswer=best.p.a;
+ if($('shortToggle').checked) currentAnswer=currentAnswer.split(/(?<=[.!?])\s+/).slice(0,2).join(' ');
+ $('answerText').textContent=currentAnswer;
+ $('answerMeta').textContent=`Matched to: “${best.p.q}” · Demo similarity ${Math.round(best.score*100)}%`;
+ $('answerCard').classList.add('show'); showStatus('Answer found',true);
+ if($('speechToggle').checked) speak(currentAnswer);
+}
+function showStatus(text,good) { $('statusText').textContent=text; $('statusDot').classList.toggle('live',currentMode==='mic'&&!!recognition); if(good) $('statusDot').style.background='#14815D'; else $('statusDot').style.background=''; }
+function speak(text) {
+ if(!('speechSynthesis' in window)) { showStatus('Speech output is not supported here',false); return; }
+ window.speechSynthesis.cancel(); const utter=new SpeechSynthesisUtterance(text); utter.rate=0.92; window.speechSynthesis.speak(utter);
+}
+$('loadBtn').addEventListener('click',()=>{const parsed=parsePairs($('qaInput').value); if(!parsed.length){showStatus('Check the Q: / A: format',false);return;} addPairs(parsed); $('qaInput').value=''; showStatus(`Added ${parsed.length} pair${parsed.length===1?'':'s'}`,true);});
+$('fileInput').addEventListener('change',async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{const content=await file.text();let imported;if(file.name.toLowerCase().endsWith('.json')){const data=JSON.parse(content);imported=Array.isArray(data)?data.map(p=>({q:String(p.q||p.question||''),a:String(p.a||p.answer||'')})).filter(p=>p.q&&p.a):[];}else{imported=parsePairs(content);}if(!imported.length){showStatus('No Q&A found. Check the file format.',false);return;}addPairs(imported);showStatus(`Imported ${imported.length} Q&A pair${imported.length===1?'':'s'}`,true);}catch(err){showStatus('Could not read this file. Check its format.',false);}finally{e.target.value='';}});
+$('exportBtn').addEventListener('click',()=>{if(!pairs.length){showStatus('Add Q&A before exporting',false);return;}const blob=new Blob([JSON.stringify(pairs,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='labprep-qa.json';document.body.append(link);link.click();link.remove();URL.revokeObjectURL(url);showStatus('Q&A JSON exported',true);});
+$('sampleBtn').addEventListener('click',()=>{addPairs(sample);showStatus('Sample study set loaded',true);});
+$('clearBtn').addEventListener('click',()=>{pairs=[];renderPairs();$('answerCard').classList.remove('show');showStatus('Study set cleared',false);});
+$('askBtn').addEventListener('click',()=>answerQuestion($('questionInput').value));
+$('questionInput').addEventListener('keydown',e=>{if(e.key==='Enter')answerQuestion($('questionInput').value)});
+$('speakBtn').addEventListener('click',()=>{if(currentAnswer)speak(currentAnswer)});
+$('copyBtn').addEventListener('click',async()=>{if(!currentAnswer)return; try{await navigator.clipboard.writeText(currentAnswer);showStatus('Answer copied',true)}catch(e){showStatus('Copy is not available in this preview',false)}});
+$('typedMode').addEventListener('click',()=>setMode('typed'));
+$('micMode').addEventListener('click',()=>setMode('mic'));
+function setMode(mode) {
+ currentMode=mode; $('typedMode').classList.toggle('active',mode==='typed'); $('micMode').classList.toggle('active',mode==='mic'); $('typedArea').hidden=mode!=='typed'; $('micArea').hidden=mode!=='mic';
+ $('micHint').textContent=mode==='mic'?'Use the microphone to capture your friend’s practice question. You can review the transcript before matching it.':'Enter what your friend asked. The demo will match it against your saved Q&A and show a concise answer.';
+ if(mode==='mic' && !('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) { $('transcript').textContent='Speech recognition is not available in this browser or preview. Switch to “Type a question” to continue.'; $('startMicBtn').disabled=true; }
+ showStatus(mode==='mic'?'Microphone is off':'Ready when you are',false);
+}
+$('startMicBtn').addEventListener('click',()=>{
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){$('transcript').textContent='Speech recognition is not supported in this browser. Use typed questions.';return;}
+ try {
+  recognition=new SR(); recognition.lang='en-US'; recognition.continuous=false; recognition.interimResults=true;
+  $('startMicBtn').disabled=true; $('stopMicBtn').disabled=false; $('transcript').textContent='Listening… ask one practice question.'; showStatus('Listening for a practice question',false); $('statusDot').classList.add('live');
+  recognition.onresult=e=>{let interim='',final='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript;else interim+=e.results[i][0].transcript;} const t=final||interim; $('transcript').textContent=t||'Listening…'; if(final){$('questionInput').value=final;answerQuestion(final);}};
+  recognition.onerror=e=>{$('transcript').textContent=`Microphone error: ${e.error}. You can switch to typed questions.`;stopRecognition();};
+  recognition.onend=()=>stopRecognition(); recognition.start();
+ } catch(e) { $('transcript').textContent='Could not start microphone. Check permission or use typed questions.'; stopRecognition(); }
+});
+function stopRecognition(){if(recognition){try{recognition.stop()}catch(e){} recognition=null;} $('startMicBtn').disabled=false; $('stopMicBtn').disabled=true; $('statusDot').classList.remove('live'); if(currentMode==='mic') $('statusText').textContent='Microphone is off';}
+$('stopMicBtn').addEventListener('click',stopRecognition);
+renderPairs();
+</script>
+</body>
+</html>
